@@ -46,8 +46,9 @@ for i in range(count_step_modeling):
         a = matrix_transition_probability[0:count_strategy_system, j]
         b = np.reshape(np.asarray(matrix_full_waitng_profitableness[i]), (count_state_system, 1))
         k = a @ b
-        matrix_full_waitng_profitableness[i + 1][j] = max(q + np.reshape(k.T, (count_strategy_system,)))
-        matrix_select_num_strategy_by_step[i+1][j] = np.argmax(q + np.reshape(k.T, (count_strategy_system,)))
+        res = q + np.reshape(k.T, (count_strategy_system,))
+        matrix_full_waitng_profitableness[i + 1][j] = max(res)
+        matrix_select_num_strategy_by_step[i+1][j] = np.argmax(res)
 
 
 # вывод результатов моделирования для каждого шага: итоговая доходность и оптимальная стратегия;
@@ -55,12 +56,17 @@ for i in range(count_step_modeling):
  для матрицы итоговой годовности - итоговая готовность для соответсвующего состояния
  для матрицы стратегии - какую лучше стратегию взять для соответсвующего состояния
  P.S. Таблица как в пособии'''
-print(matrix_select_num_strategy_by_step.T)
-print(matrix_full_waitng_profitableness.T)
+matrix_select_num_strategy_by_step = matrix_select_num_strategy_by_step.T
+matrix_full_waitng_profitableness = matrix_full_waitng_profitableness.T
+
+increment_matrix_for_strategy = np.ones(shape=matrix_select_num_strategy_by_step.shape)
+increment_matrix_for_strategy[:, 0] = 0
+print(matrix_select_num_strategy_by_step + increment_matrix_for_strategy)
+print(matrix_full_waitng_profitableness)
 
 '''Запись результатов в файл '''
-to_json = {'Strategy': matrix_select_num_strategy_by_step.T.tolist(),
-           'Profitableness': matrix_full_waitng_profitableness.T.tolist()}
+to_json = {'Strategy': matrix_select_num_strategy_by_step.tolist(),
+           'Profitableness': matrix_full_waitng_profitableness.tolist()}
 json.dump(to_json,
           codecs.open('test.json', 'w', encoding='utf-8'),
           separators=(',', ':'), sort_keys=True, indent=4)
