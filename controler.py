@@ -51,19 +51,22 @@ for i in range(count_step_modeling):
 
 
 # вывод результатов моделирования для каждого шага: итоговая доходность и оптимальная стратегия;
-print(matrix_select_num_strategy_by_step)
-print(matrix_full_waitng_profitableness)
+''' Столбики - этап моделирования, ряды:
+ для матрицы итоговой годовности - итоговая готовность для соответсвующего состояния
+ для матрицы стратегии - какую лучше стратегию взять для соответсвующего состояния
+ P.S. Таблица как в пособии'''
+print(matrix_select_num_strategy_by_step.T)
+print(matrix_full_waitng_profitableness.T)
 
-
-to_json = {'Strategy': matrix_select_num_strategy_by_step.tolist(), 'Profitableness': matrix_full_waitng_profitableness.tolist()}
+'''Запись результатов в файл '''
+to_json = {'Strategy': matrix_select_num_strategy_by_step.T.tolist(),
+           'Profitableness': matrix_full_waitng_profitableness.T.tolist()}
 json.dump(to_json,
           codecs.open('test.json', 'w', encoding='utf-8'),
           separators=(',', ':'), sort_keys=True, indent=4)
 
 
 '''
-
+TODO::
 − вывод графа состояний;
-− сохранение и загрузка данных в файл.
-
 '''
